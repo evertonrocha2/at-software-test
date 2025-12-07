@@ -1,13 +1,14 @@
 ESPECIFICAÇÃO FUNCIONAL - CALCULADORA DE IMC
 
-Versão: 1.0
-Data: 06/12/2024
+--
 
 VISÃO GERAL
 
-O sistema CalculoIMC é uma aplicação Java para cálculo do Índice de Massa Corporal (IMC). Basicamente, o sistema permite que o usuário insira seu peso e altura para calcular o IMC e receber uma classificação que indica se está dentro de uma faixa considerada saudável.
+O sistema CalculoIMC é uma aplicação Java para cálculo do Índice de Massa Corporal (IMC). O sistema permite que o usuário insira seu peso e altura para calcular o IMC e receber uma classificação que indica se está dentro de uma faixa considerada saudável.
 
 O IMC é uma medida padrão usada na área de saúde para avaliar se uma pessoa está dentro de um peso considerado adequado para sua altura. É uma fórmula simples mas útil como indicador inicial de saúde.
+
+--
 
 FUNCIONALIDADES PRINCIPAIS
 
@@ -16,21 +17,24 @@ Cálculo do IMC
 O sistema calcula o IMC usando a fórmula matemática padrão: IMC = Peso (kg) / (Altura (m))²
 
 Entrada:
+
 - Peso em quilogramas (número real)
 - Altura em metros (número real)
 
-Saída: 
+Saída:
+
 - Valor numérico do IMC em kg/m² (tipo double)
 
-O comportamento esperado é que, para valores válidos (peso e altura maiores que zero), o sistema calcule corretamente e retorne um número real positivo, mantendo a precisão de ponto flutuante.
+Para valores válidos (peso e altura maiores que zero), o sistema deveria calcular corretamente e retornar um número real positivo, mantendo a precisão de ponto flutuante.
 
-Porém, ao analisar o código, observamos que ele não realiza validação de entrada. Isso significa que aceita valores negativos, zero e valores extremos. Quando a altura é zero, ocorre divisão por zero e o resultado é Infinity. Também não há tratamento de exceções para quando o usuário insere dados inválidos.
+Porém, ao analisar o código, vi que ele não faz validação de entrada. Isso significa que aceita valores negativos, zero e valores extremos. Quando a altura é zero, ocorre divisão por zero e o resultado é Infinity. Também não há tratamento de exceções para quando o usuário insere dados inválidos.
 
 Classificação do IMC
 
 O sistema classifica o IMC em categorias baseadas em faixas de valores estabelecidas pela Organização Mundial da Saúde (OMS). Cada faixa corresponde a uma classificação específica.
 
 As faixas de classificação são:
+
 - IMC menor que 16.0: Magreza grave
 - IMC entre 16.0 e 17.0: Magreza moderada
 - IMC entre 17.0 e 18.5: Magreza leve
@@ -44,9 +48,10 @@ Entrada: Valor do IMC (número real)
 
 Saída: String com a classificação correspondente
 
-O comportamento esperado é que, para cada faixa de IMC, o sistema retorne a classificação correspondente. Valores exatamente nos limites devem ser classificados na categoria superior, e todas as faixas possíveis devem estar cobertas.
+Para cada faixa de IMC, o sistema deveria retornar a classificação correspondente. Valores exatamente nos limites devem ser classificados na categoria superior, e todas as faixas possíveis devem estar cobertas.
 
-Ao testar, verificamos que o sistema classifica corretamente valores válidos dentro das faixas. Porém, para valores inválidos, o comportamento é inesperado:
+Ao testar, vi que o sistema classifica corretamente valores válidos dentro das faixas. Porém, para valores inválidos, o comportamento é inesperado:
+
 - Valores negativos são classificados como "Magreza grave"
 - Zero é classificado como "Magreza grave"
 - Infinity é classificado como "Obesidade Grau III"
@@ -66,9 +71,11 @@ O sistema oferece uma interface de linha de comando simples. O fluxo de interaç
 7. Sistema exibe o IMC calculado no formato XX.XX kg/m²
 8. Sistema exibe a classificação
 
-O comportamento esperado seria uma interface clara e intuitiva, com mensagens de erro amigáveis caso a entrada seja inválida, e validação de entrada antes de processar.
+A interface deveria ser clara e intuitiva, com mensagens de erro amigáveis caso a entrada seja inválida, e validação de entrada antes de processar.
 
-Porém, ao testar, observamos que a interface básica funciona, mas não há tratamento de erros amigável - quando há erro, o sistema simplesmente lança exceções técnicas. Também não há validação de entrada.
+Porém, ao testar, vi que a interface básica funciona, mas não há tratamento de erros amigável - quando há erro, o sistema simplesmente lança exceções técnicas. Também não há validação de entrada.
+
+--
 
 REGRAS DE NEGÓCIO
 
@@ -76,7 +83,7 @@ Validação de Entrada
 
 A regra esperada seria que o peso deve ser um número positivo maior que zero, a altura deve ser um número positivo maior que zero, e ambos devem ser valores razoáveis para humanos.
 
-Mas a regra implementada no código é nenhuma. O sistema aceita qualquer valor double, incluindo zero, negativos e valores extremos sem nenhuma verificação.
+Mas no código não há nenhuma regra implementada. O sistema aceita qualquer valor double, incluindo zero, negativos e valores extremos sem nenhuma verificação.
 
 Cálculo do IMC
 
@@ -86,17 +93,21 @@ Classificação
 
 As regras são seguir as faixas estabelecidas pela OMS, onde valores exatamente nos limites pertencem à categoria superior, e todas as faixas devem ser cobertas sem gaps.
 
+--
+
 ENTRADAS E SAÍDAS
 
 Entradas:
 
 Peso:
+
 - Tipo: double
 - Unidade: quilogramas (kg)
 - Formato esperado: número decimal, como 70.5
 - Valores válidos esperados: maior que 0 e menor que 500 (razoável para humanos)
 
 Altura:
+
 - Tipo: double
 - Unidade: metros (m)
 - Formato esperado: número decimal, como 1.75
@@ -105,25 +116,29 @@ Altura:
 Saídas:
 
 IMC Calculado:
+
 - Tipo: double
 - Unidade: kg/m²
 - Formato de exibição: XX.XX kg/m² (com 2 casas decimais)
 
 Classificação:
+
 - Tipo: String
 - Valores possíveis: "Magreza grave", "Magreza moderada", "Magreza leve", "Saudável", "Sobrepeso", "Obesidade Grau I", "Obesidade Grau II", "Obesidade Grau III"
+
+--
 
 COMPORTAMENTO ESPERADO vs OBSERVADO
 
 Casos Válidos
 
-Quando testamos com peso de 70.0 kg e altura de 1.75 m, o sistema calculou corretamente o IMC como 22.86 kg/m² e classificou como "Saudável". Isso está correto.
+Com peso de 70.0 kg e altura de 1.75 m, o sistema calculou corretamente o IMC como 22.86 kg/m² e classificou como "Saudável". Está correto.
 
 Com peso de 90.0 kg e altura de 1.80 m, o sistema calculou 27.78 kg/m² e classificou como "Sobrepeso". Também correto.
 
 Casos Inválidos
 
-Quando testamos com peso zero e altura de 1.75 m, esperaríamos uma mensagem de erro ou validação. Porém, o sistema aceitou, calculou IMC como 0.0 e classificou como "Magreza grave". Isso está incorreto.
+Com peso zero e altura de 1.75 m, esperaríamos uma mensagem de erro ou validação. Porém, o sistema aceitou, calculou IMC como 0.0 e classificou como "Magreza grave". Está incorreto.
 
 Com peso de 70.0 kg e altura zero, esperaríamos uma mensagem de erro ou validação devido à divisão por zero. Porém, o sistema calculou IMC como Infinity e classificou como "Obesidade Grau III". Este é um erro crítico.
 
@@ -132,17 +147,20 @@ Com peso negativo de -70.0 kg e altura de 1.75 m, esperaríamos validação. Por
 Valores Limite
 
 Testamos os valores exatamente nos limites de classificação:
+
 - IMC de 16.0 foi classificado corretamente como "Magreza moderada"
 - IMC de 18.5 foi classificado corretamente como "Saudável"
 - IMC de 25.0 foi classificado corretamente como "Sobrepeso"
 
 Os limites estão funcionando corretamente.
 
+--
+
 REQUISITOS NÃO FUNCIONAIS
 
 Confiabilidade
 
-O sistema deveria lidar graciosamente com entradas inválidas e não quebrar com divisão por zero. Porém, isso não está atendido. O sistema aceita valores inválidos e pode quebrar.
+O sistema deveria lidar bem com entradas inválidas e não quebrar com divisão por zero. Porém, isso não está atendido. O sistema aceita valores inválidos e pode quebrar.
 
 Usabilidade
 
@@ -151,6 +169,8 @@ As mensagens de erro deveriam ser claras e amigáveis, e a interface deveria ser
 Robustez
 
 O sistema deveria validar entradas antes de processar e evitar resultados sem sentido. Isso não está atendido - não há validação.
+
+--
 
 LIMITAÇÕES CONHECIDAS
 
@@ -162,8 +182,10 @@ Identificamos as seguintes limitações:
 4. Pode ocorrer divisão por zero quando altura é zero
 5. Não há limites razoáveis para peso e altura
 
+--
+
 CONCLUSÃO
 
-O sistema implementa corretamente a fórmula do IMC e a classificação para valores válidos. Ele funciona bem quando recebe dados normais e corretos. Porém, apresenta deficiências críticas na validação de entrada e no tratamento de erros. Essas deficiências podem levar a resultados incorretos ou até mesmo à quebra da aplicação em casos extremos.
+O sistema implementa corretamente a fórmula do IMC e a classificação para valores válidos. Funciona bem quando recebe dados normais e corretos. Porém, apresenta deficiências críticas na validação de entrada e no tratamento de erros. Essas deficiências podem levar a resultados incorretos ou até mesmo à quebra da aplicação em casos extremos.
 
-Recomendo fortemente adicionar validação de entrada e tratamento de erros antes do lançamento em produção, especialmente para evitar a divisão por zero e para melhorar a experiência do usuário.
+Recomendo adicionar validação de entrada e tratamento de erros antes do lançamento em produção, especialmente para evitar a divisão por zero e para melhorar a experiência do usuário.

@@ -4,6 +4,8 @@ Este documento explica as justificativas para as escolhas de cenários de teste 
 
 Cada cenário foi escolhido considerando o impacto potencial de falhas, especialmente no contexto de uma aplicação de saúde digital onde erros podem ter consequências importantes.
 
+--
+
 ANÁLISE DE VALOR LIMITE - JUSTIFICATIVAS
 
 Testes de Valores Limite de Classificação
@@ -19,6 +21,8 @@ O IMC de 18.5 é o limite entre Magreza leve e Saudável. Essa é uma mudança d
 O IMC de 25.0 é o limite entre Saudável e Sobrepeso. Essa é uma transição crítica que pode indicar necessidade de intervenção. Erro aqui também tem alto impacto.
 
 A estratégia de teste para cada limite é testar três valores: o valor exatamente no limite (como 16.0), um valor imediatamente abaixo (como 15.99) e um valor imediatamente acima (como 16.01). Isso garante que a lógica de comparação está correta em ambos os lados do limite.
+
+--
 
 PARTIÇÕES DE EQUIVALÊNCIA - JUSTIFICATIVAS
 
@@ -39,6 +43,8 @@ Partição: IMC por Faixas de Classificação
 Cada faixa de classificação forma uma partição de equivalência. Todos os valores dentro de uma faixa devem receber a mesma classificação, então testamos valores no meio de cada faixa para garantir cobertura. É impossível testar todos os valores possíveis (são infinitos), mas valores dentro da mesma partição têm comportamento equivalente, então reduzimos a quantidade de testes mantendo a cobertura.
 
 O risco de não testar é que, se uma faixa inteira estiver com bug, não será detectado. E em uma aplicação de saúde, classificações médicas incorretas podem ter sérias consequências.
+
+--
 
 CASOS DE TESTE BASEADOS EM RISCOS
 
@@ -66,6 +72,8 @@ Testamos valores extremos como peso de 1000 kg e altura de 3.0 m porque, embora 
 
 Testamos porque usuários podem digitar valores incorretos por engano, pode indicar falta de validação de limites razoáveis, e não quebra a aplicação mas reduz confiabilidade. A prioridade é baixa - pode ser tratado com mensagens de validação.
 
+--
+
 LÓGICA DA APLICAÇÃO - JUSTIFICATIVAS
 
 Teste de Cálculo Correto
@@ -86,6 +94,8 @@ Testamos valores que caem em cada faixa de classificação para garantir que tod
 
 Isso é importante porque cada classificação tem significado médico diferente. Se faltar uma faixa ou houver erro em uma, pode levar a classificação incorreta. Precisamos ter cobertura completa das regras de negócio.
 
+--
+
 ESTRATÉGIA DE TESTE COMBINADA
 
 Nossa estratégia combina vários tipos de testes:
@@ -99,6 +109,8 @@ Nossa estratégia combina vários tipos de testes:
 4. Valores extremos - testa limites do sistema e identifica problemas de precisão ou overflow
 
 5. Todas as classificações - garante cobertura completa e valida todas as regras de negócio
+
+--
 
 PRIORIZAÇÃO DOS TESTES
 
@@ -115,6 +127,8 @@ Prioridade Média:
 
 Prioridade Baixa:
 - Valores extremos porque são improváveis mas podem indicar falta de validação
+
+--
 
 CONCLUSÃO
 
