@@ -1,0 +1,123 @@
+JUSTIFICATIVAS DOS CASOS DE TESTE - CALCULADORA IMC
+
+Este documento explica as justificativas para as escolhas de cenários de teste do sistema CalculoIMC. As escolhas foram baseadas em análise de valor limite, partições de equivalência, análise de riscos da aplicação e lógica das regras de negócio.
+
+Cada cenário foi escolhido considerando o impacto potencial de falhas, especialmente no contexto de uma aplicação de saúde digital onde erros podem ter consequências importantes.
+
+ANÁLISE DE VALOR LIMITE - JUSTIFICATIVAS
+
+Testes de Valores Limite de Classificação
+
+Os valores limite são aqueles pontos críticos onde a classificação muda: 16.0, 17.0, 18.5, 25.0, 30.0, 35.0 e 40.0. Testar exatamente nesses pontos é importante porque identifica erros de comparação (como usar menor que ao invés de menor ou igual), problemas com precisão de ponto flutuante, e erros na lógica das condições if-else.
+
+Do ponto de vista de risco, em uma aplicação de saúde, classificar incorretamente uma pessoa pode levar a recomendações médicas inadequadas, causar preocupação desnecessária ou falsa segurança, e até impactar decisões de tratamento. Então é fundamental que esses limites estejam corretos.
+
+Por exemplo, o IMC de 16.0 é o limite entre Magreza grave e moderada. Se esse limite estiver errado, uma pessoa pode receber classificação incorreta, o que pode influenciar recomendações nutricionais. O impacto é alto.
+
+O IMC de 18.5 é o limite entre Magreza leve e Saudável. Essa é uma mudança de categoria muito importante, de "problema" para "normal". Muda completamente a interpretação do resultado, então o impacto também é alto.
+
+O IMC de 25.0 é o limite entre Saudável e Sobrepeso. Essa é uma transição crítica que pode indicar necessidade de intervenção. Erro aqui também tem alto impacto.
+
+A estratégia de teste para cada limite é testar três valores: o valor exatamente no limite (como 16.0), um valor imediatamente abaixo (como 15.99) e um valor imediatamente acima (como 16.01). Isso garante que a lógica de comparação está correta em ambos os lados do limite.
+
+PARTIÇÕES DE EQUIVALÊNCIA - JUSTIFICATIVAS
+
+Partição: Peso Válido vs Inválido
+
+Consideramos peso válido quando está entre 1.0 kg e 500.0 kg. Abaixo de 1kg seriam bebês recém-nascidos, que não são o público-alvo típico. Acima de 500kg são valores extremamente raros e fora da faixa normal. O risco de aceitar valores inválidos é que pode gerar resultados sem sentido.
+
+Para peso inválido, consideramos valores menores ou iguais a zero, ou maiores que 500. Zero ou negativo são fisicamente impossíveis para peso. Valores extremamente altos podem indicar erro de digitação ou unidade errada. O risco é alto, pois pode causar resultados incorretos ou até divisão por zero em alguns casos.
+
+Partição: Altura Válida vs Inválida
+
+Altura válida seria entre 0.5 m e 2.5 m. Abaixo de 0.5m são bebês, que não são o público-alvo. Acima de 2.5m é extremamente raro e pode indicar erro. O risco de aceitar zero é crítico, pois causa divisão por zero.
+
+Altura inválida seria menor ou igual a zero, ou maior que 2.5m. Zero ou negativo são fisicamente impossíveis e causam divisão por zero. Valores extremamente altos provavelmente indicam erro de entrada. O risco é crítico, pois pode quebrar a aplicação.
+
+Partição: IMC por Faixas de Classificação
+
+Cada faixa de classificação forma uma partição de equivalência. Todos os valores dentro de uma faixa devem receber a mesma classificação, então testamos valores no meio de cada faixa para garantir cobertura. É impossível testar todos os valores possíveis (são infinitos), mas valores dentro da mesma partição têm comportamento equivalente, então reduzimos a quantidade de testes mantendo a cobertura.
+
+O risco de não testar é que, se uma faixa inteira estiver com bug, não será detectado. E em uma aplicação de saúde, classificações médicas incorretas podem ter sérias consequências.
+
+CASOS DE TESTE BASEADOS EM RISCOS
+
+Risco Crítico: Divisão por Zero
+
+Testamos o caso onde altura é zero porque é um risco crítico que pode quebrar a aplicação completamente. O resultado é Infinity, que é classificado incorretamente. O impacto é que a aplicação fica inutilizável.
+
+Testamos isso porque é um erro comum em código que não valida entrada, tem impacto imediato e visível, e é fácil de evitar com validação simples. A prioridade é máxima - deve ser corrigido antes do lançamento.
+
+Risco Alto: Valores Negativos
+
+Testamos peso ou altura negativo porque é um risco alto. O resultado fica matematicamente incorreto ou sem sentido, com IMC negativo ou classificação incorreta. O impacto é informação médica incorreta.
+
+Testamos porque é um erro comum de entrada do usuário, valores negativos são fisicamente impossíveis, e o usuário pode digitar por engano. A prioridade é alta, pois pode levar a informação médica incorreta.
+
+Risco Médio: Valores Zero
+
+Testamos peso zero porque é um risco médio. O resultado fica incorreto mas não quebra a aplicação. IMC zero classificado como "Magreza grave" é incorreto. O impacto é classificação médica incorreta.
+
+Testamos porque valores zero são entradas comuns quando há erro, pode ser resultado de campo não preenchido, e classificação incorreta pode preocupar o usuário desnecessariamente. A prioridade é média - deve ser validado.
+
+Risco Baixo: Valores Extremos
+
+Testamos valores extremos como peso de 1000 kg e altura de 3.0 m porque, embora seja risco baixo, o resultado é calculado corretamente mas não é realista. Pode ser erro de digitação ou unidade. O impacto é que a informação pode confundir o usuário.
+
+Testamos porque usuários podem digitar valores incorretos por engano, pode indicar falta de validação de limites razoáveis, e não quebra a aplicação mas reduz confiabilidade. A prioridade é baixa - pode ser tratado com mensagens de validação.
+
+LÓGICA DA APLICAÇÃO - JUSTIFICATIVAS
+
+Teste de Cálculo Correto
+
+Testamos primeiro com peso de 70.0 kg e altura de 1.75 m porque é o caso de uso mais comum (usuário típico), valida que a fórmula matemática está implementada corretamente, e temos um resultado esperado conhecido (22.86 kg/m²).
+
+Testamos isso primeiro porque garante que a funcionalidade básica funciona. Se esse teste falhar, todos os outros testes são irrelevantes. Serve também como base para comparar outros resultados.
+
+Teste de Diferentes Combinações
+
+Testamos múltiplas combinações de peso e altura para validar a fórmula para diferentes proporções, identificar problemas com precisão numérica, e garantir que o cálculo funciona para diferentes perfis de usuários.
+
+Isso é importante porque usuários têm diferentes combinações de peso e altura, a precisão numérica pode variar com valores diferentes, e garante robustez da implementação matemática.
+
+Teste de Todas as Classificações
+
+Testamos valores que caem em cada faixa de classificação para garantir que todas as faixas estão implementadas, identificar gaps ou sobreposições nas condições, e validar a lógica completa de classificação.
+
+Isso é importante porque cada classificação tem significado médico diferente. Se faltar uma faixa ou houver erro em uma, pode levar a classificação incorreta. Precisamos ter cobertura completa das regras de negócio.
+
+ESTRATÉGIA DE TESTE COMBINADA
+
+Nossa estratégia combina vários tipos de testes:
+
+1. Valores válidos normais - garante funcionalidade básica e cobre casos de uso mais comuns
+
+2. Valores limite - identifica erros de comparação e testa pontos críticos onde o comportamento muda
+
+3. Valores inválidos - testa robustez e validação, identificando comportamentos inesperados
+
+4. Valores extremos - testa limites do sistema e identifica problemas de precisão ou overflow
+
+5. Todas as classificações - garante cobertura completa e valida todas as regras de negócio
+
+PRIORIZAÇÃO DOS TESTES
+
+Prioridade Máxima:
+- Divisão por zero (altura = 0) porque pode quebrar a aplicação completamente
+
+Prioridade Alta:
+- Valores negativos porque causam resultados incorretos com impacto médico
+- Valores limite de classificação porque erros aqui causam classificação incorreta
+
+Prioridade Média:
+- Valores zero porque causam resultados incorretos mas não são críticos
+- Casos válidos normais para garantir funcionalidade básica
+
+Prioridade Baixa:
+- Valores extremos porque são improváveis mas podem indicar falta de validação
+
+CONCLUSÃO
+
+Os casos de teste foram escolhidos considerando análise técnica (valores limite, partições de equivalência, cobertura completa), análise de riscos (impacto no contexto de saúde, probabilidade de ocorrência, severidade), e lógica da aplicação (casos de uso comuns primeiro, funcionalidade básica antes de extremos).
+
+Esta combinação garante que as funcionalidades principais estão testadas, os riscos críticos são cobertos, comportamentos inesperados são identificados, e a aplicação está robusta para lançamento.
