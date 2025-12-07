@@ -1,24 +1,29 @@
 RELATÓRIO DE TESTES EXPLORATÓRIOS MANUAIS - CALCULADORA IMC
 
-Data: 06/12/2024
 Engenheiro de Testes: Equipe QA
 Sistema Testado: CalculoIMC
-Repositório: https://github.com/Wolfterro/Projetos-em-Java/tree/master/CalculoIMC
+
+--
 
 OBJETIVO
 
-Realizei testes exploratórios manuais para identificar falhas, comportamentos inesperados e dificuldades de uso antes do lançamento do aplicativo de cálculo de IMC. O objetivo era entender como o sistema se comporta na prática, testando diversos cenários que um usuário real poderia encontrar.
+Fiz testes exploratórios manuais para identificar falhas, comportamentos inesperados e dificuldades de uso antes do lançamento do aplicativo de cálculo de IMC. O objetivo era entender como o sistema se comporta na prática, testando vários cenários que um usuário real poderia encontrar.
+
+--
 
 METODOLOGIA
 
-Executei testes exploratórios cobrindo diferentes tipos de cenários:
+Testei diferentes tipos de cenários:
+
 - Valores válidos e normais que um usuário comum usaria
 - Valores limite onde a classificação muda
 - Valores inválidos como negativos e zero
 - Valores extremos para ver como o sistema reage
 - Comportamentos inesperados que podem indicar problemas
 
-Cada teste foi executado manualmente através da execução do programa, inserindo os valores e observando os resultados. Tudo foi anotado para identificar padrões e problemas.
+Cada teste foi executado manualmente rodando o programa, inserindo os valores e observando os resultados. Anotei tudo para identificar padrões e problemas.
+
+--
 
 CENÁRIOS TESTADOS E RESULTADOS
 
@@ -63,6 +68,7 @@ Peso: 0.0 kg
 Altura: 1.75 m
 
 Resultado: O sistema aceitou peso zero e calculou IMC como 0.0, classificando como "Magreza grave". Este é um problema porque:
+
 - O sistema não valida se o peso é maior que zero
 - Aceita valor zero que é biologicamente inválido
 - Classifica IMC zero como "Magreza grave", o que não faz sentido
@@ -74,6 +80,7 @@ Peso: -70.0 kg
 Altura: 1.75 m
 
 Resultado: O sistema aceitou peso negativo e calculou IMC como -22.86 kg/m² (negativo!), classificando como "Magreza grave". Problemas identificados:
+
 - Sistema não valida se peso é positivo
 - Aceita valores negativos que são fisicamente impossíveis
 - IMC negativo é classificado como "Magreza grave", comportamento inesperado
@@ -85,6 +92,7 @@ Peso: 70.0 kg
 Altura: 0.0 m
 
 Resultado: Quando altura é zero, ocorre divisão por zero e o IMC fica como Infinity. O sistema então classifica Infinity como "Obesidade Grau III". Este é um erro crítico porque:
+
 - Sistema não valida se altura é maior que zero
 - Divisão por zero resulta em Infinity
 - Infinity é classificado como "Obesidade Grau III", comportamento sem sentido
@@ -96,6 +104,7 @@ Peso: 70.0 kg
 Altura: -1.75 m
 
 Resultado: O sistema aceitou altura negativa. Como a altura é elevada ao quadrado, o resultado ficou positivo (22.86 kg/m²), classificado como "Saudável". Problema identificado:
+
 - Sistema não valida se altura é positiva
 - Aceita valores negativos que são fisicamente impossíveis
 - Altura negativa não existe na realidade, então o resultado está correto matematicamente mas é biologicamente impossível
@@ -106,6 +115,7 @@ Peso: 1000.0 kg
 Altura: 3.0 m
 
 Resultado: O sistema aceitou esses valores extremos, calculou IMC como 111.11 kg/m² e classificou como "Obesidade Grau III". Problema:
+
 - Sistema não valida limites razoáveis para peso e altura
 - Aceita valores que são fisicamente impossíveis para humanos
 - Pode aceitar entradas irrealistas sem alertar o usuário
@@ -116,6 +126,7 @@ Peso: 5.0 kg
 Altura: 2.5 m
 
 Resultado: O sistema aceitou essa combinação estranha, calculou IMC como 0.8 kg/m² e classificou como "Magreza grave". Problema:
+
 - Sistema não valida limites mínimos razoáveis
 - Aceita combinações de peso/altura biologicamente impossíveis
 
@@ -137,10 +148,13 @@ Peso: texto "abc"
 Altura: 1.75
 
 Resultado: Quando tentei inserir texto no campo de peso, o programa lançou uma exceção técnica (NumberFormatException). Problemas de usabilidade:
+
 - Não há tratamento de exceções amigável
 - Usuário recebe mensagem técnica ao invés de algo claro
 - Falta validação de entrada com mensagens que o usuário entenda
 - Experiência do usuário fica ruim quando há erro
+
+--
 
 FALHAS E COMPORTAMENTOS INESPERADOS IDENTIFICADOS
 
@@ -179,6 +193,8 @@ FALHAS E COMPORTAMENTOS INESPERADOS IDENTIFICADOS
    Impacto: Classificação incorreta para valor inválido
    Recomendação: Validar entrada antes de classificar
 
+--
+
 DIFICULDADES DE USO IDENTIFICADAS
 
 Encontrei algumas dificuldades que os usuários podem enfrentar:
@@ -190,6 +206,8 @@ Encontrei algumas dificuldades que os usuários podem enfrentar:
 3. As mensagens de erro são técnicas (como "NumberFormatException") ao invés de algo amigável como "Por favor, insira apenas números".
 
 4. O usuário não sabe quais valores são aceitos. Não há indicação de limites ou formato esperado.
+
+--
 
 CONCLUSÕES E RECOMENDAÇÕES
 
